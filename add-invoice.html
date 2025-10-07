@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Manager</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script src="js/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <header class="topbar">
+        <div class="left">
+            <button id="menuToggle" class="menu-icon"><i class="fas fa-bars"></i></button>
+            <span class="brand">EasyInvoice</span>
+        </div>
+        <div class="right">
+            <a href="#" title="Chat Support"><i class="fa-solid fa-comments"></i></a>
+            <a href="#" title="User"><i class="fa-solid fa-circle-user"></i></a>
+            <span id="spanUserName" class="username">Ajay Kumar(ParvatYatra)</span>
+        </div>
+    </header>
+    <!-- Top Navbar End-->
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="invoice-list.html"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
+                <li><a href="clients-list.html"><i class="fas fa-users"></i><span>Clients</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <section class="book" id="book">
+            <h3 class="booking-header" id="h3CreateInvoiceTitle">...</h3>
+            <br>
+            <div class="row">
+                <form action="" style="overflow-x: hidden;" method="post" id="CreateInvoiceForm"
+                    onsubmit="return SubmitInvoice(event)">
+                    <button class="btn" onclick="BackToInvoiceList()">Back</button>
+                    <h4 class="red-color">Please fill all mandatory fields!</h4>
+                    <br>
+                    <div class="divider"></div>
+                    <div class="row">
+                        <div class="inputBox">
+                            <h4>Mobile No. <span class="red-color">*</span></h4>
+                            <input type="text" maxlength="10" required class="input-height" id="txtMobile"
+                                placeholder="mobile number">
+                        </div>
+                        <div class="inputBox">
+                            <h4>Name <span class="red-color">*</span></h4>
+                            <input type="text" maxlength="100" required class="input-height" id="txtName"
+                                placeholder="your name">
+                        </div>
+                        <div class="inputBox">
+                            <h4>Email ID <span class="red-color">*</span></h4>
+                            <input type="email" required class="input-height" id="txtEmail" placeholder="email id">
+                        </div>
+                        <div class="inputBox">
+                            <h4>Current Address 1<span class="red-color">*</span></h4>
+                            <input id="txtAddress1" class="input-height" required maxlength="150"
+                                placeholder="current address line 1"></input>
+                        </div>
+                        <div class="inputBox">
+                            <h4>Current Address 2</h4>
+                            <input id="txtAddress2" class="input-height" maxlength="150"
+                                placeholder="current address line 2"></input>
+                        </div>
+                        <div class="inputBox">
+                            <h4>City</h4>
+                            <input id="txtCity" class="input-height" maxlength="150" placeholder="city"></input>
+                        </div>
+                        <div class="inputBox">
+                            <h4>State<span class="red-color">*</span></h4>
+                            <select id="ddlState" class="stateDropdown input-height" name="state" required>
+                                <option value="">Select state</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" style="display: none;" id="hiddenCreateInvoiceInvoiceId">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="row">
+                        <div class="inputBox">
+                            <h4>Destination<span class="red-color">*</span></h4>
+                            <select id="ddlDestination" class="destinationDropdown input-height"
+                                onchange="destinationChangeEvent()" name="destination" required>
+                                <option value="">Select destination</option>
+                            </select>
+                        </div>
+                        <div class="inputBox" id="txtDestinationOtherDiv" style="display: none;">
+                            <h4>Destination Other<span class="red-color">*</span></h4>
+                            <input id="txtDestinationOther" type="text" class="input-height" placeholder="Other">
+                        </div>
+                        <div class="inputBox">
+                            <h4>Travel Date<span class="red-color">*</span></h4>
+                            <input id="txtTravelDate" type="date" required class="input-height" placeholder="travelers">
+                        </div>
+                        <div class="inputBox">
+                            <h4>No. of travelers <span class="red-color">*</span></h4>
+                            <input id="txtNoOfTraverls" type="number" required class="input-height"
+                                placeholder="travelers">
+                        </div>
+
+                        <div class="inputBox">
+                            <h4>Advance Received</h4>
+                            <input id="txtAdvance" type="number" class="inputwidth150" placeholder="advance">
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <h2>Invoice Items</h2>
+                    <div class="table-scroll">
+                        <table id="invoiceTableNew">
+                            <thead>
+                                <tr style="background-color: #f9f9f9;">
+                                    <th>Description</th>
+                                    <th>HSN Code</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                    <th>GST %</th>
+                                    <th>GST Amount</th>
+                                    <th>Total with GST</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                    <button type="button" class="addItem" id="addItem">Add Row</button>
+
+                    <br><br>
+                    <button class="btn" type="submit">Save</button>
+                </form>
+            </div>
+            <div id="divLoader" style="display: none;" class="loader"></div>
+        </section>
+    </div>
+    <div id="popupModal" class="modal-success">
+        <div class="modal-success-content">
+            <span class="close">&times;</span>
+            <h2>Invoice saved successfully!</h2>
+            <br>
+            <div id="invoiceDetails">
+                <p class="invoiceDetails" style="font-size: small;"><strong>Invoice Number:</strong> <span
+                        id="invoiceNumber"></span></p>
+                <p class="invoiceDetails" style="font-size: small;"><strong>Invoice Date:</strong> <span
+                        id="invoiceDate"></span></p>
+            </div>
+
+            <button class="btn" id="successPageEditBtn" onclick="editInvoiceSuccess()">Edit Invoice</button>
+            <button class="btn" id="successPagePreviewBtn" onclick="previewInvoice()">Preview Invoice</button>
+            <button class="btn" id="successPageSendEmailBtn" onclick="sendEmail()">Send Email</button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            // Toggle Sidebar on small devices
+            $('#menuToggle').click(function () {
+                $('#sidebar').toggleClass('show');
+                // $('#content').toggleClass('shift');
+            });
+
+            // Function to get query parameters
+            function getQueryParams() {
+                const params = {};
+                const queryString = window.location.search.slice(1);
+                if (queryString != '') {
+                    const queryArray = queryString.split('&');
+                    queryArray.forEach(param => {
+                        const [key, value] = param.split('=');
+                        params[decodeURIComponent(key)] = decodeURIComponent(value);
+                    });
+                }
+                return params;
+            }
+            // Load Destination
+            showLoader();
+            LoadDestinations()
+                .then(success => {
+                    if (success) {
+                        LoadState().then(success => {
+                            hideLoader();
+                            let parms = getQueryParams();
+                            if (parms != null && parms.invoiceID) {
+                                document.getElementById('h3CreateInvoiceTitle').textContent = 'Edit Invoice';
+                                editInvoiceDetails(parms.invoiceID)
+                            }
+                            else {
+                                $('#addItem').click();
+                                document.getElementById('h3CreateInvoiceTitle').textContent = 'Create Invoice';
+                                new TomSelect('.destinationDropdown', {
+                                    create: true,
+                                    placeholder: "Select a destination",
+                                    allowEmptyOption: true
+                                });
+                                new TomSelect('.stateDropdown', {
+                                    create: true,
+                                    placeholder: "Select a state",
+                                    allowEmptyOption: true
+                                });
+                            }
+
+                        })
+                            .catch(error => {
+                                console.error('Failed to load state:', error);
+                                hideLoader();
+                            });
+
+                    } else {
+                        console.log('No destinations returned.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to load destinations:', error);
+                    hideLoader();
+                });
+
+            // Load State
+
+        });
+    </script>
+    <!-- book section ends -->
+
+    <!-- custom js file link  -->
+    <script src="js/script.js"></script>
+    <script> CheckUserAuth();</script>
+</body>
+
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- <link rel="stylesheet" href="css/font-awesome-css.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.js"></script>
+    <style>
+
+        .settings-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .settings-container h2 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-size: 1.5rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="file"],
+        textarea {
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .form-group.full {
+            grid-column: 1 / 3;
+        }
+
+        .img-preview {
+            margin-top: 8px;
+            max-height: 120px;
+            max-width: 120px;
+            border: 1px solid #ddd;
+            padding: 4px;
+            background: #fff;
+        }
+
+        .submit-btn {
+            margin-top: 30px;
+            padding: 14px 24px;
+            background-color: #2C5F2D;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #3D7A3D;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Top Navbar -->
+    <header class="topbar">
+        <div class="left">
+            <button id="menuToggle" class="menu-icon"><i class="fas fa-bars"></i></button>
+            <span class="brand">EasyInvoice</span>
+        </div>
+        <div class="right">
+            <a href="#" title="Chat Support"><i class="fa-solid fa-comments"></i></a>
+            <a href="#" title="User"><i class="fa-solid fa-circle-user"></i></a>
+            <span id="spanUserName" class="username">Ajay Kumar(ParvatYatra)</span>
+        </div>
+    </header>
+    <!-- Top Navbar End-->
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="invoice-list.html"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
+                <li><a href="clients-list.html"><i class="fas fa-users"></i><span>Clients</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+        <div class="content" id="content">
+            <div class="settings-container">
+                <h2>🛠 Company Settings</h2>
+                <form enctype="multipart/form-data" action="" method="post" id="CompanySettingsForm"
+                    onsubmit="return SubmitCompanySettingsForm(event)">
+
+                    <div class="form-grid">
+                        <input type="text" id="companyCode" name="CompanyCode" style="display: none;">
+                        <div class="form-group">
+                            <label for="companyName">Company Name <span class="red-color">*</span></label>
+                            <input type="text" id="companyName"  required name="CompanyName"
+                                placeholder="e.g. ParvatYatra">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="website">Company Website <span class="red-color">*</span></label>
+                            <input type="url" id="companyWebsite" name="CompanyWebsite" required
+                                placeholder="https://yourcompany.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Company Email ID <span class="red-color">*</span></label>
+                            <input type="email" id="email" name="CompanyEmailId" required
+                                placeholder="support@yourcompany.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number <span class="red-color">*</span></label>
+                            <input type="text" id="mobile" name="CompanyMobileNumber" required
+                                placeholder="e.g. 9876543210">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addLine1">Address Line 1 <span class="red-color">*</span></label>
+                            <input type="text" id="addLine1" required name="CompanyAddline1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addLine2">Address Line 2</label>
+                            <input type="text" id="addLine2" name="CompanyAddline2">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="logo">Company Logo <span class="red-color">*</span></label>
+                            <input type="file" id="logo" name="CompanyLogo" accept="image/*"
+                                onchange="previewImage(event, 'logoPreview')">
+                            <img id="logoPreview" class="img-preview" src="#" alt="Logo Preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="upiQR">UPI QR Code</label>
+                            <input type="file" id="upiQR" name="CompanyUPIQR" accept="image/*"
+                                onchange="previewImage(event, 'upiPreview')">
+                            <img id="upiPreview" class="img-preview" src="#" alt="QR Preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="payableName">Payable To (Name)</label>
+                            <input type="text" id="payableName" name="CompanyPayableName"
+                                placeholder="e.g. Kanhaiya Sharma">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="payableApps">Payable Apps (e.g. GPay, PhonePe)</label>
+                            <input type="text" id="payableApps" name="CompanyPayableAppNames">
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="invoiceQuote">Invoice Footer Note / Quote <span
+                                    class="red-color">*</span></label>
+                            <textarea id="invoiceQuote" required name="CompanyInvoiceQuote" rows="3"
+                                placeholder="e.g. Thank you for choosing ParvatYatra!"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fromEmail">From Email (for Invoice)</label>
+                            <input type="email" id="fromEmail" name="CompanyFromEmail">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ccEmail">CC Email</label>
+                            <input type="email" id="ccEmail" name="CompanyCCEmail">
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="senderName">Invoice Sender Name <span class="red-color">*</span></label>
+                            <input type="text" id="senderName" required name="CompanyInvoiceSenderName"
+                                placeholder="e.g. ParvatYatra Team">
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn">💾 Save Settings</button>
+                </form>
+                <div id="divLoader" style="display: none;" class="loader"></div>
+                <div id="successMessage" class="alert success-alert" style="display: none;">
+                    ✅ Data saved successfully!
+                </div>
+            </div>
+        </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        CheckUserAuth();
+        $(document).ready(function () {
+            getCompanySettings();
+
+            // Toggle Sidebar on small devices
+            $('#menuToggle').click(function () {
+                $('#sidebar').toggleClass('show');
+                // $('#content').toggleClass('shift');
+            });
+        });
+
+        function previewImage(event, id) {
+            const output = document.getElementById(id);
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.style.display = 'block';
+        }
+    </script>
+
+</body>
+
+
+</html>

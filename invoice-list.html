@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice List</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- <link rel="stylesheet" href="css/font-awesome-css.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Table styles (your invoice list table) */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        @media screen and (max-width: 600px) {
+
+            th,
+            td {
+                font-size: 12px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Top Navbar -->
+    <header class="topbar">
+        <div class="left">
+            <button id="menuToggle" class="menu-icon"><i class="fas fa-bars"></i></button>
+            <span class="brand">EasyInvoice</span>
+        </div>
+        <div class="right">
+            <a href="#" title="Chat Support"><i class="fa-solid fa-comments"></i></a>
+            <a href="#" title="User"><i class="fa-solid fa-circle-user"></i></a>
+            <span id="spanUserName" class="username">Ajay Kumar(ParvatYatra)</span>
+        </div>
+    </header>
+    <!-- Top Navbar End-->
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="invoice-list.html"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
+                <li><a href="clients-list.html"><i class="fas fa-users"></i><span>Clients</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content" id="content">
+        <!-- Your existing Invoice List Code Here -->
+        <div class="header">
+            <h1 style="text-align: center;">Invoices</h1>
+            <!-- <img src="images/klors_logo.png" alt="Logo" class="logo">
+                <p class="big-paragraph">Maintained by Klords LLP</p>
+                <p class="big-paragraph">Contact us +91 8865898068</p> -->
+        </div>
+
+        <div class="search-container-right">
+            <input type="text" maxlength="100" class="input-search-textbox input-height right-align" style="border: 2px solid #ddd;"
+                id="txtInvoiceListSearchName" placeholder="search keyword">
+            <button class="btn" id="searchBtn" onclick="GetInvoiceListSearch()">Search</button>
+            <button class="btn icon-circle-btn" id="addInvoiceBtn" onclick="AddInvoice()"><i
+                    class="fas fa-plus"></i></button>
+        </div>
+        <br>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="display: none;">Invoice Id</th>
+                        <th>Invoice No.</th>
+                        <th>Invoice Date</th>
+                        <th>Name</th>
+                        <th>Mobile No.</th>
+                        <th>Destination</th>
+                        <th>Travel Date</th>
+                        <th>No. of travelers</th>
+                        <th>Total Amt</th>
+                        <th>Pending Amt</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceTableBody">
+                    <!-- Rows will be appended dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="divLoader" style="display: none;" class="loader"></div>
+    </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        CheckUserAuth();
+        $(document).ready(function () {
+            let userDetails = getFromLocalStorage('LogedInUser');
+            const formData = { companyCode: userDetails.companyCode };
+            GetInvoiceList(formData);
+
+            // Toggle Sidebar on small devices
+            $('#menuToggle').click(function () {
+                $('#sidebar').toggleClass('show');
+                // $('#content').toggleClass('shift');
+            });
+        });
+    </script>
+
+</body>
+
+
+</html>

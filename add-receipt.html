@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Manager</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="css/font-awesome-css.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.js"></script>
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <header class="topbar">
+        <div class="left">
+            <button id="menuToggle" class="menu-icon"><i class="fas fa-bars"></i></button>
+            <span class="brand">EasyInvoice</span>
+        </div>
+        <div class="right">
+            <a href="#" title="Chat Support"><i class="fa-solid fa-comments"></i></a>
+            <a href="#" title="User"><i class="fa-solid fa-circle-user"></i></a>
+            <span id="spanUserName" class="username">Ajay Kumar(ParvatYatra)</span>
+        </div>
+    </header>
+    <!-- Top Navbar End-->
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="invoice-list.html"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
+                <li><a href="clients-list.html"><i class="fas fa-users"></i><span>Clients</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <section class="book" id="book">
+            <h3 class="booking-header" id="h3CreatingReceiptTitle">...</h3>
+            <br>
+            <div class="row">
+                <form action="" method="post" id="CreateReceiptForm" onsubmit="return saveReceipt(event)">
+                    <button class="btn" onclick="BackToReceiptList()">Back</button>
+                    <h4 class="red-color">Please fill all mandatory fields!</h4>
+                    <br>
+                    <div class="row">
+                        <div class="inputBox">
+                            <h4>Invoice No.</h4>
+                            <input type="text" disabled class="input-height" id="txtReceiptInvoiceNumber">
+                        </div>
+                        <div class="inputBox">
+                            <h4>Pending Amount</h4>
+                            <input type="text" disabled class="input-height" id="txtReceiptInvoicePendingAmt">
+                        </div>
+                        <input type="hidden" style="display: none;" id="hiddenCreateReceiptId">
+                    </div>
+
+                    <h2>Receipt Details</h2>
+                    <div class="row">
+                        <div class="inputBox">
+                            <h4>Receipt Amount<span class="red-color">*</span></h4>
+                            <input id="txtReceiptAmt" required type="number" class="input-height" placeholder="amount">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="inputBox">
+                            <h4>Payment Method<span class="red-color">*</span></h4>
+                            <textarea id="txtReceiptPaymentMethod" required rows="2" cols="30" maxlength="100"
+                                placeholder="payment method"></textarea>
+                        </div>
+                        <div class="inputBox">
+                            <h4>Comment</h4>
+                            <textarea id="txtReceiptPaymentReference" rows="2" cols="30" maxlength="100"
+                                placeholder="comment"></textarea>
+                        </div>
+                        <input type="hidden" style="display: none;" id="hiddenCreateInvoiceInvoiceId">
+                    </div>
+
+                    <br><br>
+                    <button class="btn" type="submit">Save</button>
+                </form>
+            </div>
+            <div id="divLoader" style="display: none;" class="loader"></div>
+        </section>
+    </div>
+    <div id="popupModal" class="modal-success">
+        <div class="modal-success-content">
+            <span class="close">&times;</span>
+            <h2>Receipt saved successfully!</h2>
+            <br>
+            <div id="invoiceDetails">
+                <p class="invoiceDetails" style="font-size: small;"><strong>Receipt Number:</strong> <span id="receiptNumber"></span></p>
+                <p class="invoiceDetails" style="font-size: small;"><strong>Receipt Date:</strong> <span id="receiptDate"></span></p>
+            </div>
+    
+            <button class="btn" id="receiptSuccessPageEditBtn" onclick="editReceiptSuccess()">Edit Receipt</button>
+            <button class="btn" id="receiptSuccessPagePreviewBtn" onclick="previewReceiptSuccess()">Preview Receipt</button>
+            <button class="btn" id="receiptSuccessPageSendEmailBtn" onclick="sendReceiptEmail()">Send Email</button>
+        </div>
+    </div>
+    <div id="successMessage" class="alert success-alert" style="display: none;">
+        ✅ Data saved successfully!
+      </div>
+    <script>
+        $(document).ready(function () {
+            // Load Destination
+            let parms = getQueryParams();
+            if (parms != null && parms.invoiceID && parms.receiptId) {
+                document.getElementById('h3CreatingReceiptTitle').textContent = 'Edit Receipt- # ' + parms.receiptNumber;
+                getReceiptInvoiceDetailsByInvoiceId(parms.invoiceID);
+                getReceiptDetailsById(parms.receiptId);
+            }
+            else {
+                document.getElementById('h3CreatingReceiptTitle').textContent = 'Add Receipt';
+                getReceiptInvoiceDetailsByInvoiceId(parms.invoiceID);
+            }
+            // Toggle Sidebar on small devices
+            $('#menuToggle').click(function () {
+                $('#sidebar').toggleClass('show');
+                // $('#content').toggleClass('shift');
+            });
+        });
+    </script>
+    <!-- custom js file link  -->
+    <script src="js/script.js"></script>
+    <script>CheckUserAuth();</script>
+</body>
+
+</html>

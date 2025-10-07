@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Manager</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.js"></script>
+    <style>
+        body {
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            background-color: #ffc107;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .action-buttons button.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .action-buttons button.receipt {
+            background-color: #3E2A47;
+            color: white;
+        }
+
+        /* Additional styles for smaller screens */
+        @media screen and (max-width: 600px) {
+
+            th,
+            td {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navbar -->
+    <header class="topbar">
+        <div class="left">
+            <button id="menuToggle" class="menu-icon"><i class="fas fa-bars"></i></button>
+            <span class="brand">EasyInvoice</span>
+        </div>
+        <div class="right">
+            <a href="#" title="Chat Support"><i class="fa-solid fa-comments"></i></a>
+            <a href="#" title="User"><i class="fa-solid fa-circle-user"></i></a>
+            <span id="spanUserName" class="username">Ajay Kumar(ParvatYatra)</span>
+        </div>
+    </header>
+    <!-- Top Navbar End-->
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                <li><a href="invoice-list.html"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
+                <li><a href="clients-list.html"><i class="fas fa-users"></i><span>Clients</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <div class="header">
+            <h1 id="h1ReceiptListTitle">Receipt List</h1>
+
+        </div>
+        <!-- <div class="search-container">
+            <button class="btn" onclick="BackToInvoiceList()">Back</button>
+            <input type="text" maxlength="100" class="input-height right-align" style="border: 2px solid #ddd; "
+                id="txtReceiptListSearchName" placeholder="search keyword">
+            <button class="btn" id="searchBtn" onclick="GetReceiptListSearch()">Search</button>
+            <button class="btn icon-circle-btn" id="addReceiptBtn" onclick="AddReceipt()"><i
+                    class="fas fa-plus"></i></button>
+
+        </div> -->
+        <div class="search-container">
+            <button class="btn" onclick="BackToInvoiceList()">Back</button>
+           
+            <div class="search-actions">
+                <input type="text" maxlength="100" class="input-search-textbox input-height right-align"
+                    id="txtReceiptListSearchName" placeholder="search keyword">
+                <button class="btn" id="searchBtn" onclick="GetReceiptListSearch()">Search</button>
+                <button class="btn icon-circle-btn" id="addReceiptBtn" onclick="AddReceipt()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="display: none;">Receipt Id</th>
+                        <th>Receipt No.</th>
+                        <th>Receipt Date</th>
+                        <th>Receipt Amount</th>
+                        <th>Payment Method</th>
+                        <th>Comment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="receiptTableBody">
+                    <!-- Rows will be appended dynamically here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="divLoader" style="display: none;" class="loader"></div>
+    </div>
+    <script src="js/script.js"></script>
+    <script>
+        CheckUserAuth();
+        function GetReceiptListSearch() {
+            let keyword = document.getElementById('txtReceiptListSearchName').value;
+            if (keyword != null) {
+                let parms = getQueryParams();
+                if (parms != null && parms.invoiceID) {
+                    let userDetails = getFromLocalStorage('LogedInUser');
+                    const formData = { invoiceId: parms.invoiceID, keyword: keyword, companyCode: userDetails.companyCode };
+                    GetReceiptList(formData);
+                }
+            }
+        }
+        function AddReceipt() {
+            let parms = getQueryParams();
+            if (parms != null && parms.invoiceID) {
+                window.location.href = 'add-receipt.html?invoiceID=' + parms.invoiceID + '&invoiceNumber=' + parms.invoiceNumber;
+            }
+        }
+        $(document).ready(function () {
+            let parms = getQueryParams();
+            if (parms != null && parms.invoiceID) {
+                document.getElementById('h1ReceiptListTitle').textContent = 'Receipt List - Invoice # ' + parms.invoiceNumber;
+                let userDetails = getFromLocalStorage('LogedInUser');
+                const formData = { invoiceId: parms.invoiceID, companyCode: userDetails.companyCode };
+                GetReceiptList(formData);
+            }
+            // Toggle Sidebar on small devices
+            $('#menuToggle').click(function () {
+                $('#sidebar').toggleClass('show');
+                // $('#content').toggleClass('shift');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Manager</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="css/font-awesome-css.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.js"></script>
+    <style>
+        header {
+            background-color: #04AA6D;
+            color: white;
+            padding: 10px;
+            z-index: 1000;
+            height: 50px;
+        }
+
+        #expense-list {
+            margin-top: 45px;
+            /* To push the list below the fixed header */
+            padding: 20px;
+            max-width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #expense-form-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #expense-form-container {
+            background-color: white;
+            padding: 15px;
+            width: 400px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 100%;
+            position: relative;
+        }
+
+        #expense-form-container form label {
+            display: block;
+            margin: 5px 0 5px;
+        }
+
+        #expense-form-container form input,
+        #expense-form-container form select,
+        #expense-form-container form button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        #expense-form-container form button {
+            background-color: #2d3e50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #expense-form-container form button:hover {
+            background-color: #2d3e50;
+        }
+
+        /* Card layout for expenses */
+        .expense-card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            /* Reduced gap between cards */
+            justify-content: flex-start;
+        }
+
+        .expense-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: calc(33.33% - 20px);
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            /* Reduced spacing between cards */
+            border: 1px solid #ccc;
+            /* Light border around each card */
+        }
+
+        .expense-card h3 {
+            margin: 0 0 10px;
+        }
+
+        .expense-card p {
+            margin: 5px 0;
+        }
+
+        .expense-card .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .expense-card .actions button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .expense-card .actions .edit-btn {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+        }
+
+        .expense-card .actions .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .add-expense-btn {
+            background-color: #2d3e50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-expense-btn:hover {
+            background-color: #2d3e50;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .expense-card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .expense-card {
+                width: 100%;
+            }
+        }
+
+        /* Close Icon Style */
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .close-popup:hover {
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Expense Management</h1>
+        <button class="btn" onclick="BackToDashboard()">Back</button>
+    </header>
+
+    <section id="expense-list">
+        <div class="search-container">
+            <input type="text" maxlength="100" class="input-height right-align" style="border: 2px solid #ddd;"
+                id="txtReceiptListSearchName" placeholder="search keyword">
+            <button class="btn" id="searchBtn" onclick="GetReceiptListSearch()">Search</button>
+        </div>
+        <h2>Expenses</h2>
+        <br>
+        <div class="expense-card-container" id="expense-card-container">
+            <!-- Dynamic cards will go here -->
+        </div>
+    </section>
+
+    <!-- Floating Add Expense Button -->
+    <button class="add-expense-btn" onclick="openExpenseForm()">+</button>
+
+    <!-- Popup Form for Adding Expense -->
+    <div id="expense-form-popup">
+        <div id="expense-form-container">
+            <!-- Close icon (cross) added here -->
+            <button class="close-popup" onclick="closeExpenseForm()">×</button>
+
+            <h2 id="form-title">Add New Expense</h2>
+            <form id="expense-form">
+                <label for="expense-name" class="default-font">Expense Name:</label>
+                <input type="text" id="expense-name" name="expense-name" required>
+
+                <label for="expense-amount" class="default-font">Amount:</label>
+                <input type="number" id="expense-amount" name="expense-amount" required>
+
+                <label for="expense-category" class="default-font">Category:</label>
+                <select id="expense-category" name="expense-category" required>
+                    <option value="Food">Food</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Others">Others</option>
+                </select>
+
+                <label for="expense-date" class="default-font">Expense Date:</label>
+                <input type="date" id="expense-date" name="expense-date" required>
+
+                <label for="trip-details" class="default-font">Trip Details:</label>
+                <input type="text" id="trip-details-search" placeholder="Search Trips..." oninput="filterTrips()">
+                <select id="trip-details" name="trip-details" required>
+                    <option value="Trip1">Trip 1</option>
+                    <option value="Trip2">Trip 2</option>
+                    <option value="Trip3">Trip 3</option>
+                    <option value="Trip4">Trip 4</option>
+                </select>
+
+                <button type="submit">Add Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let editingIndex = -1; // To track which card is being edited
+
+        // Form submit handler
+        document.getElementById('expense-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('expense-name').value;
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const category = document.getElementById('expense-category').value;
+            const date = document.getElementById('expense-date').value;
+            const tripDetails = document.getElementById('trip-details').value;
+
+            if (name && !isNaN(amount) && category && date && tripDetails) {
+                if (editingIndex === -1) {
+                    addExpenseToCard(name, amount, category, date, tripDetails);
+                } else {
+                    updateExpenseInCard(name, amount, category, date, tripDetails);
+                }
+                clearForm();
+                closeExpenseForm();
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        let expenseCounter = 1;
+
+        function addExpenseToCard(name, amount, category, date, tripDetails) {
+            const cardContainer = document.getElementById('expense-card-container');
+
+            const card = document.createElement('div');
+            card.classList.add('expense-card');
+            card.innerHTML = `
+                <p class="default-font"><strong>Expense Name:</strong> ${name}</p>
+                <p class="default-font"><strong>Amount:</strong> $${amount}</p>
+                <p class="default-font"><strong>Category:</strong> ${category}</p>
+                <p class="default-font"><strong>Expense Date:</strong> ${date}</p>
+                <p class="default-font"><strong>Trip Details:</strong> ${tripDetails}</p>
+                <div class="actions">
+                    <button class="edit-btn" onclick="editExpense(this)">Edit</button>
+                    <button class="delete-btn" onclick="deleteExpense(this)">Delete</button>
+                </div>
+            `;
+
+            cardContainer.appendChild(card);
+            expenseCounter++;
+        }
+
+        function editExpense(button) {
+            const card = button.closest('.expense-card');
+            const name = card.querySelector('p:nth-child(1)').textContent.split(':')[1].trim();
+            const amount = card.querySelector('p:nth-child(2)').textContent.split(':')[1].trim();
+            const category = card.querySelector('p:nth-child(3)').textContent.split(':')[1].trim();
+            const date = card.querySelector('p:nth-child(4)').textContent.split(':')[1].trim();
+            const tripDetails = card.querySelector('p:nth-child(5)').textContent.split(':')[1].trim();
+
+            // Populate the form with the current values
+            document.getElementById('expense-name').value = name;
+            document.getElementById('expense-amount').value = amount;
+            document.getElementById('expense-category').value = category;
+            document.getElementById('expense-date').value = date;
+            document.getElementById('trip-details').value = tripDetails;
+
+            editingIndex = Array.from(card.parentNode.children).indexOf(card);
+
+            // Change form title to 'Edit Expense' and button text to 'Save'
+            document.getElementById('form-title').textContent = 'Edit Expense';
+            document.querySelector('#expense-form button[type="submit"]').textContent = 'Save Expense';
+
+            openExpenseForm();
+        }
+
+        function updateExpenseInCard(name, amount, category, date, tripDetails) {
+            const cardContainer = document.getElementById('expense-card-container');
+            const card = cardContainer.children[editingIndex];
+
+            // Update the card with new values
+            card.querySelector('p:nth-child(1)').textContent = `Expense Name: ${name}`;
+            card.querySelector('p:nth-child(2)').textContent = `Amount: $${amount}`;
+            card.querySelector('p:nth-child(3)').textContent = `Category: ${category}`;
+            card.querySelector('p:nth-child(4)').textContent = `Expense Date: ${date}`;
+            card.querySelector('p:nth-child(5)').textContent = `Trip Details: ${tripDetails}`;
+
+            // Reset the editing index
+            editingIndex = -1;
+
+            // Change form title back to 'Add Expense' and button to 'Add Expense'
+            document.getElementById('form-title').textContent = 'Add New Expense';
+            document.querySelector('#expense-form button[type="submit"]').textContent = 'Add Expense';
+        }
+
+        function deleteExpense(button) {
+            const card = button.closest('.expense-card');
+            card.remove();
+        }
+
+        function clearForm() {
+            document.getElementById('expense-name').value = '';
+            document.getElementById('expense-amount').value = '';
+            document.getElementById('expense-category').value = 'Food';
+            document.getElementById('expense-date').value = '';
+            document.getElementById('trip-details').value = 'Trip1';
+        }
+
+        function openExpenseForm() {
+            document.getElementById('expense-form-popup').style.display = 'flex';
+        }
+
+        function closeExpenseForm() {
+            document.getElementById('expense-form-popup').style.display = 'none';
+        }
+
+        function BackToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+        function filterTrips() {
+            const searchQuery = document.getElementById('trip-details-search').value.toLowerCase();
+            const tripSelect = document.getElementById('trip-details');
+            const options = tripSelect.querySelectorAll('option');
+
+            options.forEach(option => {
+                const optionText = option.textContent.toLowerCase();
+                if (optionText.includes(searchQuery)) {
+                    option.style.display = 'block'; // Show matching option
+                } else {
+                    option.style.display = 'none'; // Hide non-matching option
+                }
+            });
+        }
+
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+        addExpenseToCard('Kanhaiya', 5000, 'Entertainment', new Date(), 'Trip 1');
+
+    </script>
+
+</body>
+
+</html>

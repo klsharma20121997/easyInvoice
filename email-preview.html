@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Preview</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="css/font-awesome-css.min.css">
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <script src="js/jquery.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            /* Reduced padding */
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section h2 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #333333;
+        }
+
+        .email-content {
+            border: 1px solid #dddddd;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 1rem;
+            background: #1d3456;
+            color: white;
+            cursor: pointer;
+            font-size: 17px;
+            height: 35px;
+            width: 80px;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background: #1d3456ba;
+            color: #ffb421;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <h3>Email Preview</h3>
+        </div>
+        <div class="section">
+            <h2>To:</h2>
+            <p id="ptoEmailId">/p>
+        </div>
+        <div class="section">
+            <h2>Subject:</h2>
+            <p id="pEmailSubject"></p>
+        </div>
+        <div class="section">
+            <h2>Body Content:</h2>
+            <div class="email-content" id="divEmailContentBody">
+            </div>
+        </div>
+    </div>
+    <!-- custom js file link  -->
+    <script src="js/script.js"></script>
+    <script>
+        CheckUserAuth();
+        // Display invoice details
+        const receiptParams = getFromLocalStorage('SuccessPage');
+        document.getElementById('ptoEmailId').textContent = receiptParams.receiptEmailContent.to || 'N/A';
+        document.getElementById('pEmailSubject').textContent = receiptParams.receiptEmailContent.subject || 'N/A';
+        document.getElementById('divEmailContentBody').innerHTML = receiptParams.receiptEmailContent.body || 'N/A';
+
+    </script>
+</body>
+
+</html>
