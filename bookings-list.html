@@ -138,22 +138,22 @@
     </div>
 
 
-    
+    <script src="js/script.js"></script>
+    <script src="js/bookings.js"></script>
     <script>
         $(document).ready(function () {
-            let formData = { CompanyCode:"PARVAT", Keyword: "" };
+            let userDetails = getFromLocalStorage('LogedInUser');
+            let formData = { CompanyCode:userDetails.companyCode, Keyword: "" };
             fetchBookingApi(formData);
 
             // Toggle Sidebar on small devices
             $('#menuToggle').click(function () {
                 $('#sidebar').toggleClass('show');
-                // $('#content').toggleClass('shift');
             });
         });
 
     </script>
-    <script src="js/script.js"></script>
-    <script src="js/bookings.js"></script>
+    
 </body>
 
 

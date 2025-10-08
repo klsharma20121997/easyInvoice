@@ -1,11 +1,9 @@
 //apiUrl = 'http://localhost:5226/api/';
 apiUrl = 'https://api.klords.com/api/';
 
-let url = apiUrl + 'Upload/booking/save';     // Update with your API endpoint
-
 
 function fetchBookingApi(formdata) {
-    fetch("https://api.klords.com/api/Upload/booking/search", {
+    fetch(apiUrl + "Upload/booking/search", {
         method: "POST",
         headers: { 'Content-Type': "application/json" },
         body: JSON.stringify(formdata)
