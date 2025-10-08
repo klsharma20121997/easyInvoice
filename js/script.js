@@ -865,7 +865,8 @@ function GetMenuName(pageName) {
     { page_name: 'receipt-list.html', menuName: 'invoice-list.html' },
     { page_name: 'add-receipt.html', menuName: 'invoice-list.html' },
     { page_name: 'clients-list.html', menuName: 'clients-list.html' },
-    { page_name: 'settings.html', menuName: 'settings.html' }];
+    { page_name: 'settings.html', menuName: 'settings.html' },
+    { page_name: 'bookings-list.html', menuName: 'bookings-list.html' }];
 
     let menu = pages.find(x => x.page_name == pageName);
     return menu.menuName;
