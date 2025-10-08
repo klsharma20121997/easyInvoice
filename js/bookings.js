@@ -22,11 +22,12 @@ function fetchBookingApi(formdata) {
 }
 
 function GetBookingListSearch() {
+    let userDetails = getFromLocalStorage('LogedInUser');
     let keyword = document.getElementById("txtBookingListSearchName").value || null;
 
     if (keyword != null) {
         let code = keyword;
-        let formData = { CompanyCode: "PARVAT", Keyword: code }
+        let formData = { CompanyCode: userDetails.companyCode, Keyword: code }
         fetchBookingApi(formData);
     }
 }
@@ -194,4 +195,10 @@ function TravellerImg(imgURL) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+// Get data from Local Storage
+function getFromLocalStorage(key) {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null; // Return parsed data or null if not found
 }
