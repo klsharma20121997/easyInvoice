@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Detail</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { padding: 10px 20px; background-color: #3f51b5; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background-color: #283593; }
+  </style>
+</head>
+
+<body>
+  <h2>Booking Detail</h2>
+  <button onclick="exportToExcel()">Download Excel with Images and Links</button>
+
+  <script>
+    const bookings = [
+      {
+        bookingId: 1001,
+        primary: { name: 'Kanhaiya', mobile: '8865898068', email: 'ksharma@gmail.com', aadhar: 'https://api.klords.com//uploads/0d23ef82-ca76-41df-a1b8-da6aeb94377c.png' },
+        emergency: { name: 'Kanhaiya', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/63ff8bce-4e70-42d7-9eae-5aa77e0637cd.png' },
+        travel: { destination: 'Paris', travelDate: '2025-10-08', travellerCount: 2 },
+        travellers: [
+          { name: 'K', age: 30, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/d73d7498-a28c-4d4c-8e47-71bacd3397a5.png' },
+          { name: 'O', age: 29, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/1d77de02-0dc4-4130-9191-320618d5e321.png' }
+        ]
+      }
+    ];
+
+    async function getBase64Image(url) {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function exportToExcel() {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Booking Details');
+
+      worksheet.columns = [
+        { header: 'Booking ID', key: 'bookingId', width: 12 },
+        { header: 'Primary Name', key: 'primaryName', width: 15 },
+        { header: 'Primary Mobile', key: 'primaryMobile', width: 15 },
+        { header: 'Primary Email', key: 'primaryEmail', width: 20 },
+        { header: 'Primary Aadhar', key: 'primaryAadhar', width: 15 },
+        { header: 'Primary Aadhar URL', key: 'primaryAadharUrl', width: 30 },
+        { header: 'Emergency Name', key: 'emergencyName', width: 15 },
+        { header: 'Emergency Mobile', key: 'emergencyMobile', width: 15 },
+        { header: 'Emergency Aadhar', key: 'emergencyAadhar', width: 15 },
+        { header: 'Emergency Aadhar URL', key: 'emergencyAadharUrl', width: 30 },
+        { header: 'Destination', key: 'destination', width: 15 },
+        { header: 'Travel Date', key: 'travelDate', width: 15 },
+        { header: 'Traveller Count', key: 'travellerCount', width: 15 },
+        { header: 'Traveller Name', key: 'travellerName', width: 15 },
+        { header: 'Traveller Age', key: 'travellerAge', width: 12 },
+        { header: 'Traveller Gender', key: 'travellerGender', width: 12 },
+        { header: 'Traveller Mobile', key: 'travellerMobile', width: 15 },
+        { header: 'Traveller Aadhar', key: 'travellerAadhar', width: 15 },
+        { header: 'Traveller Aadhar URL', key: 'travellerAadharUrl', width: 30 }
+      ];
+
+      for (const booking of bookings) {
+        for (const traveller of booking.travellers) {
+          const row = worksheet.addRow({
+            bookingId: booking.bookingId,
+            primaryName: booking.primary.name,
+            primaryMobile: booking.primary.mobile,
+            primaryEmail: booking.primary.email,
+            primaryAadharUrl: booking.primary.aadhar,
+            emergencyName: booking.emergency.name,
+            emergencyMobile: booking.emergency.mobile,
+            emergencyAadharUrl: booking.emergency.aadhar,
+            destination: booking.travel.destination,
+            travelDate: booking.travel.travelDate,
+            travellerCount: booking.travel.travellerCount,
+            travellerName: traveller.name,
+            travellerAge: traveller.age,
+            travellerGender: traveller.gender,
+            travellerMobile: traveller.mobile,
+            travellerAadharUrl: traveller.aadhar
+          });
+
+          // Embed thumbnails in Excel (optional)
+          const primaryImgId = workbook.addImage({ base64: await getBase64Image(booking.primary.aadhar), extension: 'png' });
+          worksheet.addImage(primaryImgId, `E${row.number}:E${row.number}`);
+
+          const emergencyImgId = workbook.addImage({ base64: await getBase64Image(booking.emergency.aadhar), extension: 'png' });
+          worksheet.addImage(emergencyImgId, `I${row.number}:I${row.number}`);
+
+          const travellerImgId = workbook.addImage({ base64: await getBase64Image(traveller.aadhar), extension: 'png' });
+          worksheet.addImage(travellerImgId, `R${row.number}:R${row.number}`);
+        }
+      }
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      saveAs(new Blob([buffer]), 'BookingDetailsWithLinks.xlsx');
+    }
+  </script>
+</body>
+
+</html>

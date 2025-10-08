@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Detail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #f0f4ff, #f9fafc);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 40px 30px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+      transition: all 0.3s ease;
+    }
+
+    .container:hover {
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.09);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a237e;
+      margin-bottom: 40px;
+    }
+
+    .section {
+      border-radius: 18px;
+      background: #fafbff;
+      padding: 25px 28px;
+      margin-bottom: 30px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .section h3 {
+      font-size: 1.3rem;
+      color: #3f51b5;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .info.two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .details {
+      flex: 1 1 100%;
+    }
+
+    .details p {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 5px;
+      margin: 8px 0;
+      font-size: 15px;
+      align-items: center;
+    }
+
+    .label {
+      color: #5f6368;
+      font-weight: 600;
+    }
+
+    /* Table Styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 15px;
+      overflow-x: auto;
+    }
+
+    thead {
+      background: #e8eaf6;
+      color: #1a237e;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:nth-child(even) {
+      background: #f9fafc;
+    }
+
+    tr:hover {
+      background: #f1f3fe;
+      transition: background 0.25s;
+    }
+
+    /* Aadhar thumbnails */
+    .aadhar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .aadhar-thumb {
+      width: 70px;
+      height: 55px;
+      border-radius: 10px;
+      border: 1px solid #d0d7e2;
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+      object-fit: cover;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .aadhar-thumb:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-icon {
+      background: #3f51b5;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-icon:hover {
+      background: #283593;
+      transform: translateY(-1px);
+    }
+
+    /* Back button */
+    .btn-back {
+      display: inline-block;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: linear-gradient(135deg, #2c3e9e, #3f51b5);
+      transform: translateY(-1px);
+    }
+
+    .footer {
+      text-align: right;
+      margin-top: 30px;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 85%;
+      max-height: 80%;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      object-fit: contain;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      font-size: 22px;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-btn:hover {
+      background: #fff;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .info.two-column {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .info.two-column {
+        grid-template-columns: 1fr;
+      }
+
+      th,
+      td {
+        font-size: 14px;
+      }
+
+      .aadhar-thumb {
+        width: 60px;
+        height: 45px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section {
+        padding: 18px 15px;
+      }
+
+      .btn-back {
+        width: 100%;
+        text-align: center;
+      }
+
+      .details p {
+        grid-template-columns: 130px 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Booking Detail</h2>
+
+    <!-- Primary & Emergency Contacts in Two Columns -->
+    <div class="info two-column">
+      <!-- Primary Applicant -->
+      <div class="section">
+        <h3>👤 Primary Applicant</h3>
+        <div class="details">
+          <p><span class="label">Name:</span> Kanhaiya</p>
+          <p><span class="label">Mobile:</span> 8865898068</p>
+          <p><span class="label">Email:</span> ksharma.20121997@gmail.com</p>
+          <p><span class="label">Aadhar:</span>
+            <span id="primaryAadhar"></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Emergency Contact -->
+      <div class="section">
+        <h3>📞 Emergency Contact</h3>
+        <div class="details">
+          <p><span class="label">Name:</span> Kanhaiya</p>
+          <p><span class="label">Mobile:</span> 8865898068</p>
+          <p><span class="label">Aadhar:</span>
+            <span id="emergencyAadhar"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Travel Info -->
+    <div class="section">
+      <h3>✈️ Travel Details</h3>
+      <div class="details">
+        <p><span class="label">Destination:</span> 3</p>
+        <p><span class="label">Travel Date:</span> 08/10/2025</p>
+        <p><span class="label">Travellers Count:</span> 2</p>
+      </div>
+    </div>
+
+    <!-- Travellers Table -->
+    <div class="section">
+      <h3>👥 Travellers</h3>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Mobile</th>
+              <th>Aadhar</th>
+            </tr>
+          </thead>
+          <tbody id="travellerTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="btn-back" onclick="goBack()">⬅ Back</button>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal(event)">×</button>
+      <img id="fullImage" src="" alt="Aadhar Full">
+    </div>
+  </div>
+
+  <script>
+    const primaryApplicant = { aadhar: 'https://api.klords.com//uploads/0d23ef82-ca76-41df-a1b8-da6aeb94377c.png' };
+    const emergencyContact = { aadhar: 'https://api.klords.com//uploads/63ff8bce-4e70-42d7-9eae-5aa77e0637cd.png' };
+    const travellers = [
+      { id: 1, name: 'K', age: 30, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/d73d7498-a28c-4d4c-8e47-71bacd3397a5.png' },
+      { id: 2, name: 'O', age: 29, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/1d77de02-0dc4-4130-9191-320618d5e321.png' }
+    ];
+
+    function renderAadharImage(aadharUrl) {
+      if (!aadharUrl) return 'Not Uploaded';
+      return `
+      <div class="aadhar-actions">
+        <img src="${aadharUrl}" class="aadhar-thumb" onclick="viewImage('${aadharUrl}')" alt="Aadhar">
+        <button class="btn-icon" onclick="downloadImage('${aadharUrl}')">⬇ Download</button>
+      </div>`;
+    }
+
+    document.getElementById('primaryAadhar').innerHTML = renderAadharImage(primaryApplicant.aadhar);
+    document.getElementById('emergencyAadhar').innerHTML = renderAadharImage(emergencyContact.aadhar);
+
+    const tableBody = document.getElementById('travellerTable');
+    travellers.forEach(t => {
+      const row = `
+      <tr>
+        <td>${t.id}</td>
+        <td>${t.name}</td>
+        <td>${t.age}</td>
+        <td>${t.gender}</td>
+        <td>${t.mobile}</td>
+        <td>${renderAadharImage(t.aadhar)}</td>
+      </tr>`;
+      tableBody.innerHTML += row;
+    });
+
+    function viewImage(src) {
+      document.getElementById('fullImage').src = src;
+      document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function closeModal(event) {
+      if (event.target.id === 'imageModal' || event.target.classList.contains('close-btn')) {
+        document.getElementById('imageModal').style.display = 'none';
+      }
+    }
+
+    function downloadImage(url, filename = 'Aadhar.jpg') {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function goBack() {
+      alert('Going back to booking list...');
+    }
+  </script>
+
+</body>
+</html>
