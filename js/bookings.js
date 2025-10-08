@@ -158,7 +158,7 @@ function reviewTraveller() {
 }
 
 function backOnBookings() {
-    window.location.href = "bookings.html";
+    window.location.href = "bookings-list.html";
 }
 
 function downloadCustomerImg() {
