@@ -301,9 +301,9 @@
       <div class="section">
         <h3>👤 Primary Applicant</h3>
         <div class="details">
-          <p><span class="label">Name:</span> Kanhaiya</p>
-          <p><span class="label">Mobile:</span> 8865898068</p>
-          <p><span class="label">Email:</span> ksharma.20121997@gmail.com</p>
+          <p><span class="label">Name:</span><span id="customerName"></span></p>
+          <p><span class="label">Mobile:</span><span id="customerMobileNumber"></span></p>
+          <p><span class="label">Email:</span><span id="customerEmailId"></span></p>
           <p><span class="label">Aadhar:</span>
             <span id="primaryAadhar"></span>
           </p>
@@ -314,8 +314,8 @@
       <div class="section">
         <h3>📞 Emergency Contact</h3>
         <div class="details">
-          <p><span class="label">Name:</span> Kanhaiya</p>
-          <p><span class="label">Mobile:</span> 8865898068</p>
+          <p><span class="label">Name:</span><span id="emergencyContactName"></span></p>
+          <p><span class="label">Mobile:</span><span id="emergencyContactNumber"></span></p>
           <p><span class="label">Aadhar:</span>
             <span id="emergencyAadhar"></span>
           </p>
@@ -327,9 +327,9 @@
     <div class="section">
       <h3>✈️ Travel Details</h3>
       <div class="details">
-        <p><span class="label">Destination:</span> 3</p>
-        <p><span class="label">Travel Date:</span> 08/10/2025</p>
-        <p><span class="label">Travellers Count:</span> 2</p>
+        <p><span class="label">Destination:</span><span id="destinationId"></span></p>
+        <p><span class="label">Travel Date:</span><span id="travelDate"></span></p>
+        <p><span class="label">Travellers Count:</span><span id="numTravellers"></span></p>
       </div>
     </div>
 
@@ -367,12 +367,31 @@
   </div>
 
   <script>
-    const primaryApplicant = { aadhar: 'https://api.klords.com//uploads/0d23ef82-ca76-41df-a1b8-da6aeb94377c.png' };
-    const emergencyContact = { aadhar: 'https://api.klords.com//uploads/63ff8bce-4e70-42d7-9eae-5aa77e0637cd.png' };
-    const travellers = [
-      { id: 1, name: 'K', age: 30, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/d73d7498-a28c-4d4c-8e47-71bacd3397a5.png' },
-      { id: 2, name: 'O', age: 29, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/1d77de02-0dc4-4130-9191-320618d5e321.png' }
-    ];
+    // const primaryApplicant = { aadhar: 'https://api.klords.com//uploads/0d23ef82-ca76-41df-a1b8-da6aeb94377c.png' };
+    // const emergencyContact = { aadhar: 'https://api.klords.com//uploads/63ff8bce-4e70-42d7-9eae-5aa77e0637cd.png' };
+    // const travellers = [
+    //   { id: 1, name: 'K', age: 30, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/d73d7498-a28c-4d4c-8e47-71bacd3397a5.png' },
+    //   { id: 2, name: 'O', age: 29, gender: 'Male', mobile: '8865898068', aadhar: 'https://api.klords.com//uploads/1d77de02-0dc4-4130-9191-320618d5e321.png' }
+    // ];
+    let searchId = new URLSearchParams(window.location.search);
+    let getvalue = searchId.get('sendid');
+    let getLocalStorageValue = JSON.parse(localStorage.getItem('savedAPIData'));
+    // console.log(getLocalStorageValue);
+    let saperateObject = getLocalStorageValue.find((xc) => xc.bookingId == getvalue);
+    let traveldate = `${saperateObject.travelDate}`;
+    let objectdate = new Date(traveldate);
+    let formattedDate = objectdate.toLocaleDateString("en-GB");
+
+    document.getElementById('customerName').innerText = saperateObject.customerName;
+    document.getElementById('customerMobileNumber').innerText = saperateObject.customerMobileNumber;
+    document.getElementById('customerEmailId').innerText = saperateObject.customerEmailId;
+
+    document.getElementById('emergencyContactName').innerText = saperateObject.emergencyContactName;
+    document.getElementById('emergencyContactNumber').innerText = saperateObject.emergencyContactNumber;
+
+    document.getElementById('destinationId').innerText = saperateObject.destinationName;
+    document.getElementById('travelDate').innerText = formattedDate;
+    document.getElementById('numTravellers').innerText = saperateObject.numTravellers;
 
     function renderAadharImage(aadharUrl) {
       if (!aadharUrl) return 'Not Uploaded';
@@ -383,19 +402,19 @@
       </div>`;
     }
 
-    document.getElementById('primaryAadhar').innerHTML = renderAadharImage(primaryApplicant.aadhar);
-    document.getElementById('emergencyAadhar').innerHTML = renderAadharImage(emergencyContact.aadhar);
+    document.getElementById('primaryAadhar').innerHTML = renderAadharImage(saperateObject.bookingAadharPath);
+    document.getElementById('emergencyAadhar').innerHTML = renderAadharImage(saperateObject.emergencyAadharPath);
 
-    const tableBody = document.getElementById('travellerTable');
-    travellers.forEach(t => {
+    const tableBody = document.getElementById('travellerTable'); 
+    saperateObject.travellers.forEach((t, i) => {
       const row = `
       <tr>
-        <td>${t.id}</td>
+        <td>${i + 1}</td>
         <td>${t.name}</td>
         <td>${t.age}</td>
         <td>${t.gender}</td>
         <td>${t.mobile}</td>
-        <td>${renderAadharImage(t.aadhar)}</td>
+        <td>${renderAadharImage(t.aadharCardPath)}</td>
       </tr>`;
       tableBody.innerHTML += row;
     });
@@ -423,8 +442,10 @@
 
     function goBack() {
       alert('Going back to booking list...');
+      window.location.href = "bookings-list.html";
     }
   </script>
 
 </body>
+
 </html>

@@ -50,7 +50,7 @@ function setBookingTableData(data) {
             <td>${items.customerEmailId}</td>
             <td>${formattedDate}</td>
             <td>${items.numTravellers}</td>
-            <td>${items.destinationId}</td>
+            <td>${items.destinationName}</td>
             <td><button onclick="viewTraveller('${items.bookingId}')" class="viewButton">view</button</td>`
 
         bookingTableBody.appendChild(createrow);
@@ -58,10 +58,13 @@ function setBookingTableData(data) {
 }
 
 function viewTraveller(Bookingid) {
-    window.location.href = `reviewTraveller.html?sendid=${Bookingid}`;
+    // window.location.href = `reviewTraveller.html?sendid=${Bookingid}`;
+    window.location.href = `newBookingDetails.html?sendid=${Bookingid}`;
 }
 
-// review page
+
+
+// review page(newBookingDetails.html)
 function reviewTraveller() {
     let searchId = new URLSearchParams(window.location.search);
     let getvalue = searchId.get('sendid');
@@ -72,131 +75,131 @@ function reviewTraveller() {
     let objectdate = new Date(traveldate);
     let formattedDate = objectdate.toLocaleDateString("en-GB");
 
-    const reviewArea = document.getElementById('reviewArea');
-    let html = `
-         <div class="mb-3 p-3 border rounded bg-light">
-            <h6>Primary Applicant</h6>
-            <p class="mb-1"><strong>Name:</strong> ${saperateObject.customerName}</p>
-            <p class="mb-1"><strong>Mobile:</strong> ${saperateObject.customerMobileNumber}</p>
-            <p class="mb-1"><strong>Email:</strong> ${saperateObject.customerEmailId}</p>
-            <div class="d-flex">
-               <p class="mb-0"><strong>Aadhar:</strong></p>
-               <div class="image-container">
-                  <span class="mt-2 ms-2"><img id="customerImg" src='${saperateObject.bookingAadharPath}' width="100px" height="90px" style="border-radius:8px;"> </span>
-                  <span class="download-icon" onclick="downloadCustomerImg()" ><i class="fa-solid fa-eye"></i></span>
-               </div>
-               <a href='${saperateObject.bookingAadharPath}' download='customer-image.png'><button class="ms-4 mt-5"><i class="fa-solid fa-circle-arrow-down"></i></button></a>
-            </div>
-        </div>
+    // const reviewArea = document.getElementById('reviewArea');
+    // let html = `
+    //      <div class="mb-3 p-3 border rounded bg-light">
+    //         <h6>Primary Applicant</h6>
+    //         <p class="mb-1"><strong>Name:</strong> ${saperateObject.customerName}</p>
+    //         <p class="mb-1"><strong>Mobile:</strong> ${saperateObject.customerMobileNumber}</p>
+    //         <p class="mb-1"><strong>Email:</strong> ${saperateObject.customerEmailId}</p>
+    //         <div class="d-flex">
+    //            <p class="mb-0"><strong>Aadhar:</strong></p>
+    //            <div class="image-container">
+    //               <span class="mt-2 ms-2"><img id="customerImg" src='${saperateObject.bookingAadharPath}' width="100px" height="90px" style="border-radius:8px;"> </span>
+    //               <span class="download-icon" onclick="downloadCustomerImg()" ><i class="fa-solid fa-eye"></i></span>
+    //            </div>
+    //            <a href='${saperateObject.bookingAadharPath}' download='customer-image.png'><button class="ms-4 mt-5"><i class="fa-solid fa-circle-arrow-down"></i></button></a>
+    //         </div>
+    //     </div>
 
-        <div class="mb-3 p-3 border rounded bg-light">
-            <h6>Emergency Contact</h6>
-            <p class="mb-1"><strong>Name:</strong> ${saperateObject.emergencyContactName}</p>
-            <p class="mb-1"><strong>Mobile:</strong> ${saperateObject.emergencyContactNumber}</p>
-            <div class="d-flex">
-               <p class="mb-0"><strong>Aadhar:</strong></p>
-               <div class="image-container">
-                  <span class="mt-2 ms-2"><img id="EmgCustomerImg" src='${saperateObject.emergencyAadharPath}' width="100px" height="90px" style="border-radius:8px;"> </span>
-                  <span class="download-icon" onclick="downloadEmergencyCustomerImg()" ><i class="fa-solid fa-eye"></i></span>
-               </div>
-               <a href='${saperateObject.emergencyAadharPath}' download='customer-image.png'><button class="ms-4 mt-5"><i class="fa-solid fa-circle-arrow-down"></i></button></a>
-            </div>
-        </div>
+    //     <div class="mb-3 p-3 border rounded bg-light">
+    //         <h6>Emergency Contact</h6>
+    //         <p class="mb-1"><strong>Name:</strong> ${saperateObject.emergencyContactName}</p>
+    //         <p class="mb-1"><strong>Mobile:</strong> ${saperateObject.emergencyContactNumber}</p>
+    //         <div class="d-flex">
+    //            <p class="mb-0"><strong>Aadhar:</strong></p>
+    //            <div class="image-container">
+    //               <span class="mt-2 ms-2"><img id="EmgCustomerImg" src='${saperateObject.emergencyAadharPath}' width="100px" height="90px" style="border-radius:8px;"> </span>
+    //               <span class="download-icon" onclick="downloadEmergencyCustomerImg()" ><i class="fa-solid fa-eye"></i></span>
+    //            </div>
+    //            <a href='${saperateObject.emergencyAadharPath}' download='customer-image.png'><button class="ms-4 mt-5"><i class="fa-solid fa-circle-arrow-down"></i></button></a>
+    //         </div>
+    //     </div>
 
-        <div class="mb-3 p-3 border rounded bg-light">
-            <h6>Travel</h6>
-            <p class="mb-1"><strong>Destination:</strong>${saperateObject.destinationId}</p>
-            <p class="mb-1"><strong>Travel Date:</strong> ${formattedDate}</p>
-            <p class="mb-0"><strong>Travellers Count:</strong> ${saperateObject.numTravellers}</p>
-        </div>
+    //     <div class="mb-3 p-3 border rounded bg-light">
+    //         <h6>Travel</h6>
+    //         <p class="mb-1"><strong>Destination:</strong>${saperateObject.destinationId}</p>
+    //         <p class="mb-1"><strong>Travel Date:</strong> ${formattedDate}</p>
+    //         <p class="mb-0"><strong>Travellers Count:</strong> ${saperateObject.numTravellers}</p>
+    //     </div>
 
-        <div class="mb-3 p-3 border rounded bg-light">
-            <h6>Travellers</h6>
-            `;
+    //     <div class="mb-3 p-3 border rounded bg-light">
+    //         <h6>Travellers</h6>
+    //         `;
 
-    if (saperateObject.travellers.length === 0) {
-        html += `<p class="mb-0 text-muted">No travellers added.</p>`;
-    } else {
-        html += `<div class="table-responsive">
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Age</th>
-                            <th>Gender</th>
-                            <th>Mobile</th>
-                            <th>Aadhar</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-        saperateObject.travellers.forEach((t, i) => {
-            html += `<tr>
-                            <td>${i + 1}</td>
-                            <td>${t.name}</td>
-                            <td>${t.age}</td>
-                            <td>${t.gender}</td>
-                            <td>${t.mobile}</td>
-                            <td>
-                              <div class="image-container m-0 p-0">
-                                  <img class="mt-3" class="travellerImg" src="${t.aadharCardPath || '(not uploaded)'}" width="100px" height="60px" style="border-radius:8px;">
-                                  <span class="download-eye" onclick="TravellerImg('${t.aadharCardPath}')" ><i class="fa-solid fa-eye"></i></span>
-                               </div>
-                            </td>
-                        </tr>`;
-        });
-        html += `</tbody>
-                </table>
-            </div>`;
-    }
+    // if (saperateObject.travellers.length === 0) {
+    //     html += `<p class="mb-0 text-muted">No travellers added.</p>`;
+    // } else {
+    //     html += `<div class="table-responsive">
+    //             <table class="table table-sm">
+    //                 <thead>
+    //                     <tr>
+    //                         <th>#</th>
+    //                         <th>Name</th>
+    //                         <th>Age</th>
+    //                         <th>Gender</th>
+    //                         <th>Mobile</th>
+    //                         <th>Aadhar</th>
+    //                     </tr>
+    //                 </thead>
+    //                 <tbody>`;
+    //     saperateObject.travellers.forEach((t, i) => {
+    //         html += `<tr>
+    //                         <td>${i + 1}</td>
+    //                         <td>${t.name}</td>
+    //                         <td>${t.age}</td>
+    //                         <td>${t.gender}</td>
+    //                         <td>${t.mobile}</td>
+    //                         <td>
+    //                           <div class="image-container m-0 p-0">
+    //                               <img class="mt-3" class="travellerImg" src="${t.aadharCardPath || '(not uploaded)'}" width="100px" height="60px" style="border-radius:8px;">
+    //                               <span class="download-eye" onclick="TravellerImg('${t.aadharCardPath}')" ><i class="fa-solid fa-eye"></i></span>
+    //                            </div>
+    //                         </td>
+    //                     </tr>`;
+    //     });
+    //     html += `</tbody>
+    //             </table>
+    //         </div>`;
+    // }
 
-    html += `
-        </div>`;
-    reviewArea.innerHTML = html;
+    // html += `
+    //     </div>`;
+    // reviewArea.innerHTML = html;
 }
 
-function backOnBookings() {
-    window.location.href = "bookings-list.html";
-}
+// function backOnBookings() {
+//     window.location.href = "bookings-list.html";
+// }
 
-function downloadCustomerImg() {
-    let customerImg = document.getElementById("customerImg").src;
+// function downloadCustomerImg() {
+//     let customerImg = document.getElementById("customerImg").src;
 
-        let link = document.createElement("a");
-        link.href = customerImg;
-        link.download = "customer.png";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+//     let link = document.createElement("a");
+//     link.href = customerImg;
+//     link.download = "customer.png";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
 
- 
-}
 
-function downloadEmergencyCustomerImg() {
-    let customerImg = document.getElementById("EmgCustomerImg").src;
+// }
 
-    let link = document.createElement("a");
-    link.href = customerImg;
-    link.download = "customer.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
+// function downloadEmergencyCustomerImg() {
+//     let customerImg = document.getElementById("EmgCustomerImg").src;
 
-function TravellerImg(imgURL) {
-    // let customerImg = document.querySelectorAll(".travellerImg").src;
-    let customerImg = imgURL;
+//     let link = document.createElement("a");
+//     link.href = customerImg;
+//     link.download = "customer.png";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+// }
 
-    let link = document.createElement("a");
-    link.href = customerImg;
-    link.download = "customer.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
+// function TravellerImg(imgURL) {
+//     // let customerImg = document.querySelectorAll(".travellerImg").src;
+//     let customerImg = imgURL;
 
-// Get data from Local Storage
-function getFromLocalStorage(key) {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null; // Return parsed data or null if not found
-}
+//     let link = document.createElement("a");
+//     link.href = customerImg;
+//     link.download = "customer.png";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+// }
+
+// // Get data from Local Storage
+// function getFromLocalStorage(key) {
+//     const data = localStorage.getItem(key);
+//     return data ? JSON.parse(data) : null; // Return parsed data or null if not found
+// }
