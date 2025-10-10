@@ -56,6 +56,8 @@
             }
         }
     </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 </head>
 
@@ -102,8 +104,7 @@
             <input type="text" maxlength="100" class="input-search-textbox input-height right-align"
                 style="border: 2px solid #ddd;" id="txtBookingListSearchName" placeholder="search keyword">
             <button class="btn" id="searchBtn" onclick="GetBookingListSearch()">Search</button>
-            <!-- <button class="btn icon-circle-btn" id="addInvoiceBtn" onclick="AddInvoice()"><i
-                    class="fas fa-plus"></i></button> -->
+            <button class="btn icon-circle-btn" id="excelButton" title="download excel file" onclick="exportToExcel()"><i class="fa-regular fa-file-excel"></i></button>
         </div>
         <br>
         <div class="table-container">
@@ -136,7 +137,6 @@
         <div id="divLoader" style="display: none;" class="loader"></div>
     </div>
     </div>
-
 
     <script src="js/script.js"></script>
     <script src="js/bookings.js"></script>
